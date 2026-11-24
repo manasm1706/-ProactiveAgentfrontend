@@ -1,0 +1,45 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: sqlite:////app/data/ps22.db
+      DATASET_PATH: /data/PS22_dataset.xlsx
+      MCP_SERVER_URL: http://mcp:8001/mcp
+      START_MCP_SERVER: "false"
+    volumes:
+      - ps22-data:/app/data
+    depends_on:
+      - mcp
+
+  mcp:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["python", "-m", "app.mcp_server.server"]
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: sqlite:////app/data/ps22.db
+      DATASET_PATH: /data/PS22_dataset.xlsx
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8001
+    volumes:
+      - ps22-data:/app/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  ps22-data:
