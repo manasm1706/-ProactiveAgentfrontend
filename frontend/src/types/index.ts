@@ -1,0 +1,2 @@
+export type Customer={customer_id:string;age:number;city:string;occupation:string;customer_segment:string;monthly_income_inr:number;preferred_channel:string;preferred_contact_hour:number;app_usage_frequency:string;marketing_opt_out:boolean;existing_products:string;approx_account_balance_inr:number;record_type:string;risk_level?:string;latest_signal?:any};
+export type PipelineResult={stages:any[];decision:any;ai_mode:string};
